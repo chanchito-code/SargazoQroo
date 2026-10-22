@@ -1,58 +1,161 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SargazoQroo
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Español** · [English](README.en.md)
 
-## About Laravel
+Aplicación web para el **pronóstico, monitoreo y simulación del arribo de sargazo** en las playas de Quintana Roo, México.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+> **Aviso:** proyecto informativo y educativo. Los pronósticos se basan en datos históricos y en un modelo heurístico propio; no sustituyen la información oficial de SEMA-Q. Roo, la Semar u otras autoridades.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Características
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Dashboard** con pronóstico anual, variación respecto al año previo, playas monitoreadas, playas en alerta y temporada de sargazo.
+- **Pronóstico mensual** por año (2020–2026) con toneladas estimadas, índice de afectación (0–100), nivel de riesgo y días estimados de arribo.
+- **Mapa interactivo** de 18 playas agrupadas en 7 zonas/municipios, con nivel de afectación por playa.
+- **Simulador de escenarios** con cinco variables: biomasa en el Atlántico, temperatura del mar, vientos alisios, corrientes/nutrientes y esfuerzo de limpieza.
+- **Gráficas** comparativas de la serie histórica y de la distribución estimada por municipio.
+- **API JSON** para consultar el pronóstico de un año y ejecutar simulaciones.
 
-## Learning Laravel
+## Stack
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+| Capa | Tecnología |
+| --- | --- |
+| Backend | PHP 8.3, Laravel 13 |
+| Frontend | Blade, Tailwind CSS 4, Bootstrap 5, Bootstrap Icons |
+| Gráficas | ApexCharts |
+| Bundler | Vite 8 |
+| Base de datos | SQLite (por defecto), MySQL o PostgreSQL |
+| Pruebas | PHPUnit 12 |
+| Estilo | Laravel Pint |
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Requisitos
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- PHP **8.3+** con las extensiones habituales de Laravel (`mbstring`, `openssl`, `pdo`, `tokenizer`, `xml`, `ctype`, `json`, `fileinfo`).
+- [Composer](https://getcomposer.org/) 2.
+- Node.js **^20.19** o **>=22.12** (requerido por Vite 8).
+- SQLite, MySQL o PostgreSQL.
 
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Instalación
 
 ```bash
-composer require laravel/boost --dev
+# 1. Clonar el repositorio
+git clone https://github.com/chanchito-code/SargazoQroo.git
+cd SargazoQroo
 
-php artisan boost:install
+# 2. Dependencias de PHP
+composer install
+
+# 3. Configuración del entorno
+cp .env.example .env        # Windows PowerShell: Copy-Item .env.example .env
+php artisan key:generate
+
+# 4. Base de datos SQLite (crear el archivo antes de migrar)
+# Windows PowerShell:
+New-Item -ItemType File -Path database/database.sqlite -Force
+# Linux/macOS:
+# touch database/database.sqlite
+php artisan migrate
+
+# 5. Dependencias y build del frontend
+npm install
+npm run build
+
+# 6. Servidor de desarrollo
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+También puedes ejecutar el asistente de instalación:
 
-## Contributing
+```bash
+composer run setup
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+La aplicación quedará disponible en `http://127.0.0.1:8000`.
 
-## Code of Conduct
+> Si usas MySQL o PostgreSQL, ajusta `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` y `DB_PASSWORD` en `.env` y ejecuta `php artisan migrate`.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Uso
 
-## Security Vulnerabilities
+La pantalla principal se divide en cuatro secciones:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. **Dashboard** — resumen de la temporada y del año seleccionado.
+2. **Pronóstico** — selector de mes y año con el detalle por playa y las recomendaciones según el nivel de afectación.
+3. **Mapa** — estado de cada playa y reparto estimado por municipio.
+4. **Simulador** — ajuste de variables ambientales y de limpieza para comparar el escenario base contra el simulado.
 
-## License
+## API
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Las rutas son `web` (usan sesión y CSRF), por lo que las peticiones `POST` deben incluir la cookie de sesión y el token CSRF (`X-CSRF-TOKEN` o `_token`).
+
+### `POST /api/prediccion`
+
+Devuelve el pronóstico de los 12 meses de un año.
+
+```json
+{
+  "anio": 2026
+}
+```
+
+### `POST /api/simular`
+
+Ejecuta una simulación para un mes/año. Las claves de `valores` son opcionales y toman el valor por defecto si se omiten.
+
+```json
+{
+  "mes": 6,
+  "anio": 2026,
+  "valores": {
+    "biomasa": 40,
+    "temperatura": 28,
+    "vientos": 20,
+    "corrientes": 60,
+    "limpieza": 50
+  }
+}
+```
+
+Rangos de las variables del simulador:
+
+| Variable | Unidad | Rango |
+| --- | --- | --- |
+| `biomasa` | millones de toneladas | 0–80 |
+| `temperatura` | °C | 24–32 |
+| `vientos` | km/h | 5–45 |
+| `corrientes` | índice 0–100 | 0–100 |
+| `limpieza` | índice 0–100 | 0–100 |
+
+## Datos
+
+Los datos históricos viven en `app/Support/SargazoData.php`:
+
+- Totales anuales de sargazo recolectado en Quintana Roo (2020–2026), con fuente y marca de dato oficial o estimado.
+- Curvas estacionales de arribo mensual (normal y adelantada).
+- Catálogo de playas (coordenadas para el mapa y sensibilidad) y zonas/municipios con su peso y sensibilidad.
+- Niveles de afectación: sin presencia, bajo, moderado, alto y excesivo.
+
+Fuentes citadas en el código: SEMA-Q. Roo, Semar y reportes oficiales. Los años 2022 y 2023 son estimaciones de cierre de temporada; 2026 es una proyección.
+
+## Estructura del proyecto
+
+```text
+app/
+├── Http/Controllers/          # HomeController y controladores de la API
+├── Services/SargazoPredictor.php  # Modelo de pronóstico y simulación
+└── Support/SargazoData.php    # Dataset histórico, playas, zonas y niveles
+resources/
+├── views/                     # Vistas Blade (dashboard, mapa, pronóstico, simulador)
+└── js/                        # Lógica del frontend (mapa, gráficas, simulador)
+routes/web.php                 # Rutas de la app y de la API
+tests/                         # Pruebas de feature y unitarias
+```
+
+## Pruebas y estilo
+
+```bash
+php artisan test
+vendor/bin/pint
+```
+
+## Licencia
+
+MIT.

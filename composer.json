@@ -1,9 +1,9 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "chanchito-code/sargazoqroo",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "Pronóstico, monitoreo y simulación del arribo de sargazo en las playas de Quintana Roo / Sargassum forecasting, monitoring and simulation for the beaches of Quintana Roo.",
+    "keywords": ["laravel", "sargazo", "quintana-roo", "pronostico"],
     "license": "MIT",
     "require": {
         "php": "^8.3",
